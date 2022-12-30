@@ -1,45 +1,56 @@
-use std::{default::Default, fmt::{Display, write}};
+use std::{fmt::{Display}, ops::Deref};
 
-pub enum Extreme<'a> {
-    Emoji(&'a str),
-}
-
-impl Default for Extreme<'_> {
-    fn default() -> Self {
-        Self::Emoji("Not Set Yet!")
+macro_rules! whitespace {
+    ($n:expr) => {
+        format!("{}{}", " ".repeat($n), "")
     }
 }
 
-// impl Extreme {
-// }
-pub enum OneLine<'a> {
-    ANSI(&'a str),
-    Cool(&'a str),
-}
+pub trait Vomitable {}
 
-pub enum Colored<'a> {
-    Lolcat(&'a str),
-    Rgb(&'a str),
-    Bg(&'a str),
-}
+#[derive(Debug)]
+pub struct Food(String);
 
-pub enum Fancy<'a> {
-    Bloody(&'a str),
-    Graphitti(&'a str),
-}
-
-pub enum Frame<'a> {
-    Asterisk(&'a str),
-}
-impl Frame {
-    fn asterisk(&self) -> &'_ str {
-        "anan"
+impl Food {
+    pub fn new(given: &mut str) -> Self {
+        Food(given.to_string())
     }
-}
-impl Display for Frame {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Frame::Asterisk(given) => write(f, Frame::Asterisk(given).asterisk())
+
+    pub fn asterisk(&mut self, margin_hor:usize, margin_ver:usize) {
+        let mut base = String::new();
+        let basis = self.vomit().len();
+        for _ in 0..basis+margin_hor+2 {
+            base.push('*');
         }
+        for _ in 0..1+margin_ver { // -> now it uses +1 which stands for one line input. I will
+            // configure it to be able to procces more than one line. (TODO!)
+            base.push_str(&format!("\n*{margin_hor}{self}{margin_hor}*", margin_hor = whitespace!(margin_hor/2), self = self.digest()));
+        }
+        base.push('\n');
+        for _ in 0..basis+margin_hor+2 {
+            base.push('*');
+        }
+        self.0 = base;
+    }
+
+    pub fn vomit(&self) -> String {
+        (&***self).to_string()
+    }
+    fn digest<'a>(&'a self) -> &'a str {
+        &***self
     }
 }
+
+impl Display for Food {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.vomit())
+    }
+}
+
+impl Deref for Food {
+    type Target = String;
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+

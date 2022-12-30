@@ -1,9 +1,8 @@
 mod utils;
-use utils::enums::Frame;
-
-use crate::utils::{enums::Extreme};
+use utils::enums::Food;
 
 pub fn run() {
-    let asterisk = Frame::Asterisk("Some");
-    print!("{}", asterisk);
+    let mut asterisk = Food::new(&mut "Works Fine but My exam week is coming :(".to_owned());
+    asterisk.asterisk(110, 10);
+    print!("{}", asterisk.vomit());
 }
