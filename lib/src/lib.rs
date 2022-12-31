@@ -1,8 +1,17 @@
 mod utils;
-use utils::enums::Food;
+use crate::utils::Food;
+
 
 pub fn run() {
-    let mut asterisk = Food::new(&mut "Works Fine but My exam week is coming :(".to_owned());
-    asterisk.asterisk(110, 10);
-    print!("{}", asterisk.vomit());
+    let mut asterisk_framed_hello = Food::new(&mut "Hello".to_owned()); // -> passing in mutable reference to a String instance.
+    asterisk_framed_hello.frame("*", 40, 3); // -> Creating a '*' frame and using some margin values to get the boundary.
+    print!("{asterisk_framed_hello}");
 }
+
+/*
+***********************************************
+*                                             *
+*                    Hello                    *
+*                                             *
+***********************************************
+*/
